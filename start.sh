@@ -1,0 +1,1 @@
+gunicorn momo_project_final.wsgi:application

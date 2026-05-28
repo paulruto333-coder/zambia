@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Starlink Zambia - Data Plan Reseller{% endblock %}</title>
+    <link rel="icon" type="image/png" href="https://www.starlink.com/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --momo-yellow: #FFCC00;
+            --momo-dark: #333333;
+        }
+        .starlink-black {
+            background-color: #000000;
+        }
+        .momo-yellow-bg {
+            background-color: var(--momo-yellow);
+        }
+        .momo-gradient {
+            background: linear-gradient(135deg, var(--momo-yellow) 0%, #FFD633 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .package-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .package-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        .package-card.selected {
+            border: 2px solid #000;
+            background-color: #f8fafc;
+        }
+        body {
+            padding-top: 72px; /* Height of fixed header */
+            padding-bottom: 72px; /* Height of fixed footer */
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Fixed Header -->
+    <header class="bg-black text-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="{% url 'landing_page' %}" class="flex items-center gap-2">
+                <img src="{% static 'images/starlink_logo.png' %}" alt="STARLINK" class="h-8">
+                <span class="text-sm border-l pl-2 ml-2 border-gray-600 hidden sm:inline">Zambia Reseller</span>
+            </a>
+            <nav class="hidden md:flex gap-6">
+                <a href="{% url 'network_dashboard' %}" class="text-gray-300 hover:text-white flex items-center gap-2">
+                    <i class="uil uil-wifi"></i> <span>Status</span>
+                </a>
+                <a href="{% url 'plans_page' %}" class="text-gray-300 hover:text-white flex items-center gap-2">
+                    <i class="uil uil-home"></i> <span>Plans</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 py-4">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-700{% elif message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Fixed Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl z-50">
+        <div class="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3 flex justify-around items-center">
+            <a href="{% url 'network_dashboard' %}" class="flex flex-col items-center gap-1 {% if request.resolver_match.url_name == 'network_dashboard' or request.resolver_match.url_name == 'landing_page' %}text-blue-600{% else %}text-gray-600{% endif %} transition-all">
+                <i class="uil uil-wifi text-2xl"></i>
+                <span class="text-xs font-semibold">Status</span>
+            </a>
+            
+            <a href="{% url 'plans_page' %}" class="flex flex-col items-center gap-1 {% if request.resolver_match.url_name == 'plans_page' %}text-blue-600{% else %}text-gray-600{% endif %} transition-all">
+                <i class="uil uil-shopping-bag text-2xl"></i>
+                <span class="text-xs font-semibold">Plans</span>
+            </a>
+            
+            
+            <a href="#" class="flex flex-col items-center gap-1 text-gray-600 hover:text-blue-600 transition-all">
+                <i class="uil uil-setting text-2xl"></i>
+                <span class="text-xs font-semibold">Settings</span>
+            </a>
+        </div>
+    </nav>
+</body>
+</html>

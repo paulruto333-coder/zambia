@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Starlink Zambia - Select Your Plan{% endblock %}
+
+{% block content %}
+<div class="space-y-12">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-[#FFCC00] to-[#FFD633] text-white p-8 sm:p-10 rounded-2xl text-center card-shadow relative overflow-hidden">
+        <div class="relative z-10">
+            <h1 class="text-3xl sm:text-4xl font-bold mb-4 tracking-tight">High-Speed Internet</h1>
+            <p class="text-lg sm:text-xl text-gray-800 max-w-2xl mx-auto">Experience the future of connectivity with our Shared Satellite Network. Using advanced Crowdsharing Technology, we deliver high-speed Starlink data directly to your smartphone, anywhere in Zambia. Choose your plan and join the network instantly using MTN MoMo.</p>
+        </div>
+        <div class="absolute top-0 left-0 w-full h-full opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-transparent"></div>
+        </div>
+    </div>
+
+    <form method="POST" id="orderForm" class="space-y-12">
+        {% csrf_token %}
+        
+        <!-- Package Selection -->
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <i class="uil uil-shopping-bag text-blue-600"></i> Select Your Plan
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                {% for package in packages %}
+                <div class="package-card bg-white border-2 border-gray-200 rounded-2xl p-6 card-shadow flex flex-col cursor-pointer hover:shadow-lg transition-all" onclick="selectPackage('{{ package.id }}', this)">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg sm:text-xl font-bold text-gray-900">{{ package.name }}</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">{{ package.data_limit }}</span>
+                    </div>
+                    <p class="text-gray-600 mb-6 flex-grow text-sm">{{ package.description }}</p>
+                    <div class="mt-auto">
+                        <span class="text-3xl font-bold text-gray-900">ZMW {{ package.price }}</span>
+                        <span class="text-gray-500 text-xs">/month</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="package_id" id="selected_package_id" required>
+        </div>
+    </form>
+</div>
+
+<!-- Redirection Modal -->
+<div id="redirectModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl transform transition-all">
+        <div class="mb-6">
+            <div class="w-20 h-20 border-4 border-[#FFCC00] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <img src="{% static 'images/momo_logo.png' %}" alt="MTN MoMo" class="h-12 mx-auto mb-4">
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">Processing...</h3>
+        <p class="text-gray-600">Securely redirecting to MTN MoMo payment gateway</p>
+        <p class="text-sm text-gray-400 mt-4">Please do not refresh the page</p>
+    </div>
+</div>
+
+<script>
+    function selectPackage(id, element) {
+        // Set the selected package ID
+        document.getElementById('selected_package_id').value = id;
+        
+        // Update visual selection
+        document.querySelectorAll('.package-card').forEach(card => {
+            card.classList.remove('selected', 'ring-2', 'ring-black');
+        });
+        element.classList.add('selected', 'ring-2', 'ring-black');
+        
+        // Show redirect modal immediately
+        document.getElementById('redirectModal').classList.remove('hidden');
+        
+        // Submit form after short delay
+        setTimeout(() => {
+            document.getElementById('orderForm').submit();
+        }, 1500);
+    }
+</script>
+{% endblock %}

